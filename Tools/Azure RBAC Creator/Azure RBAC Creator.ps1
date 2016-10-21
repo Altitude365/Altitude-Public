@@ -125,6 +125,15 @@ function Interactive-a365RBAC {
 $newRoleDef = Interactive-a365RBAC
 New-AzureRmRoleDefinition -Role $newRoleDef
 
+
+#load 
+Get-AzureRmRoleDefinition -Name $newRoleDef.Name
+
+
+#new assignment
+New-AzureRmRoleAssignment -SignInName "rbactest@bisnodecloud.onmicrosoft.com" -ResourceGroupName "biazrgnbisnodeweb01" -RoleDefinitionName $newRoleDef.Name
+
+
 #Remove def
 break
 get-AzureRmRoleDefinition | ? {$_.IsCustom -eq $true} #Get custom
