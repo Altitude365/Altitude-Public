@@ -8,7 +8,7 @@
 [Parameter(Mandatory=$false)][string]$SqlServerPort="1433"
 )
 
-$SQLCred = Get-AutomationPSCredential -Name 'SQLCred'
+$SQLCred = Get-AutomationPSCredential -Name $sqlCreadVariableName
 if (-not $SQLCred) {
     Throw "No creds"
 }
