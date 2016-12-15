@@ -1,8 +1,8 @@
 ﻿$StorageAccountName = "StorageAccountName"
 $StorageAccountKey = "StorageAccountKey"
-$Tablename = "SQLDBAuditLogsXXXXX"
+$Tablename = "SQLDBAuditLogsxxxxx"
 [string[]]$dates = @(
-"20161115"
+"20161215"
 )
 
 #Create Storage Account Context
@@ -30,7 +30,7 @@ $logObject = $dates.ForEach({
 })
 
 #Get all ClientIP by log count
-$logObject | group -Property ClientIP | sort -Descending Count | select Count, Name
+$logObject | group -Property ClientIP | sort -Descending Count | select Count, Name | ogv
 
 #Out grid all logs
 $logObject | ogv
