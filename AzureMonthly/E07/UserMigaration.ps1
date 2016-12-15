@@ -62,3 +62,4 @@ $users.ForEach({
 #Type=Migration_CL MailBoxSizeBytes_d > 10000000 | EXTEND floor(div(MailBoxSizeBytes_d,100000)) as MailBozSizeMB | measure count(), sum(MailBozSizeMB) by user_s,Success_b | top 100
 #Type=Migration_CL MailBoxSizeBytes_d > 10000000 Success_b=true | EXTEND floor(div(MailBoxSizeBytes_d,100000)) as MailBozSizeMB | measure count(), sum(MailBozSizeMB) as MBSize by user_s | top 10 | sort MBSize desc
 #Type=Migration_CL Success_b=false Description_s!="User ok" | EXTEND scale(MailBoxSizeBytes_d,0,100) as MBSizeScale | measure count() as Count,avg(MBSizeScale) as AVGMBScale by Description_s | sort AVGMBScale desc | top 20
+#Type:Perf CounterName:"% Free Space" | sort TimeGenerated DESC | measure avg(CounterValue) as free by InstanceName,TimeGenerated | where (free < 95)
