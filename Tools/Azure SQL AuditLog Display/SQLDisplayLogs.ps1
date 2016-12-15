@@ -1,6 +1,6 @@
 ﻿$StorageAccountName = "StorageAccountName"
 $StorageAccountKey = "StorageAccountKey"
-$Tablename = "StorageTableName"
+$Tablename = "SQLDBAuditLogsXXXXX"
 [string[]]$dates = @(
 "20161115"
 )
