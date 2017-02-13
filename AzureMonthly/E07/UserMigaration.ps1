@@ -1,5 +1,5 @@
 ﻿#You need Widows management framework 5+!!!!!
-cd "C:\your\local\patch\to\the\script"                  #ChangeTHISChangeTHISChangeTHISChangeTHISChangeTHISChangeTHISChangeTHISChangeTHISChangeTHISChangeTHISChangeTHISChangeTHISChangeTHIS
+cd "C:\git\Altitude-Public\AzureMonthly\E07"                  #ChangeTHISChangeTHISChangeTHISChangeTHISChangeTHISChangeTHISChangeTHISChangeTHISChangeTHISChangeTHISChangeTHISChangeTHISChangeTHIS
 import-module .\Get-Excuse.psm1 
 
 $VerbosePreference = "continue"
