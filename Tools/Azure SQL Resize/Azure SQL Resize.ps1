@@ -1,6 +1,6 @@
 ﻿param(
-[Parameter(Mandatory=$true)][ValidateSet("basic","standard","premium")][string]$EDITION,
-[Parameter(Mandatory=$true)][ValidateSet('S0','S1','S2','S3','P1','P2','P3','P4','P6','P11','P15')][string]$SERVICE_OBJECTIVE,
+[Parameter(Mandatory=$true)][ValidateSet("basic","standard","premium","premiumrs")][string]$EDITION,
+[Parameter(Mandatory=$true)][ValidateSet('S0','S1','S2','S3','P1','P2','P3','P4','P6','P11','P15','PRS1','PRS2','PRS4','PRS6')][string]$SERVICE_OBJECTIVE,
 [Parameter(Mandatory=$false)][string]$DBSIZE="250GB",
 [Parameter(Mandatory=$true)][string]$sqlCreadVariableName,
 [Parameter(Mandatory=$true)][string]$SqlServer,
