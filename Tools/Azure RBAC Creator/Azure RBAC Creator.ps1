@@ -2,9 +2,10 @@
 Login-AzureRmAccount
 
 #Select Subscription
-$sub = Get-AzureRmSubscription | ogv -OutputMode Single
-Select-AzureRmSubscription -SubscriptionName $sub.SubscriptionName
+$sub = Get-AzureRmSubscription | ogv -PassThru
+$sub | Select-AzureRmSubscription
 
+#region functions
 function get-subOps {
 param ($RootOP)
     [string[]]$subOps=(Get-AzureRmProviderOperation "$RootOP" | select Operation).Operation #Get Operation
@@ -121,17 +122,26 @@ function Interactive-a365RBAC {
     }
     return $role
 }
+#endregion
 
 $newRoleDef = Interactive-a365RBAC
 New-AzureRmRoleDefinition -Role $newRoleDef
 
-
 #load 
 Get-AzureRmRoleDefinition -Name $newRoleDef.Name
 
+#load and custom config
+$role = Get-AzureRmRoleDefinition | ogv -PassThru
+$role.Actions.Add($newRoleDef.Actions)
+$role.Actions.Add("Microsoft.Automation/automationAccounts/runbooks/draft/readContent/action")
+$role.Actions.Add("Microsoft.Automation/automationAccounts/runbooks/draft/undoEdit/action")
+$role.AssignableScopes.Add(("/subscriptions/0d8634d0-5890-4a87-b7bf-71913ecddd5d"))
+Set-AzureRmRoleDefinition -Role $role
 
 #new assignment
 New-AzureRmRoleAssignment -SignInName "rbactest@bisnodecloud.onmicrosoft.com" -ResourceGroupName "biazrgnbisnodeweb01" -RoleDefinitionName $newRoleDef.Name
+
+
 
 
 #Remove def
