@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Praktikertjänst.ODL.Messages</id>
+    <version>1.0.0</version>
+    <title>Praktikertjänst.ODL.Messages</title>
+    <authors>Praktikertjänst</authors>
+    <owners>Praktikertjänst</owners>
+    <licenseUrl>https://praktikertjanst.visualstudio.com</licenseUrl>
+    <projectUrl>https://praktikertjanst.visualstudio.com</projectUrl>
+    <iconUrl>https://praktikertjanst.visualstudio.com</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Odl Messages</description>
+    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>Odl messages</tags>
+  </metadata>
+</package>
