@@ -1,5 +1,5 @@
 ﻿#Login
-Login-AzureRmAccount
+#Login-AzureRmAccount#87923978234
 
 #Select Subscription
 $sub = Get-AzureRmSubscription | ogv -PassThru
