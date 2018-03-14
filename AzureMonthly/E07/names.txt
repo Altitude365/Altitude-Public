@@ -1,6 +1,6 @@
 MARY           2.629  2.629      1
 PATRICIA       1.073  3.702      2
-LINDA          1.035  4.736      3
+LINDA          1.035  4.736      32
 BARBARA        0.980  5.716      4
 ELIZABETH      0.937  6.653      5
 JENNIFER       0.932  7.586      6
