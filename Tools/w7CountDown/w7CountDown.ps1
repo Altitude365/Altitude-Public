@@ -1,4 +1,4 @@
-﻿function Get-a365MigBatchSize {
+﻿function Get-a365MigWin7BatchSize {
 param(
 [int]$NumberofWin7,
 [int]$WorkHoursPerDay=8,
@@ -6,6 +6,8 @@ param(
 )
     $now = get-date
     $w7exp = (get-date 2020-01-14)
+
+    $timespan = $w7exp - $now
 
     [bool[]]$workdays= New-Object bool
     for ($i = 1; $i -lt $timespan.Days; $i++)
