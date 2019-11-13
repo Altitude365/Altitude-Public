@@ -20,7 +20,7 @@ param (
     [object[]]$ProviderOperations = Get-AzProviderOperation * #Get all Provider Operations
     [string[]]$Ops = $ProviderOperations.Operation #Filter out the Operation Value
 
-    [string]$RootOP = $Ops.ForEach({($psitem -split "/")[0]}) | sort | Get-Unique | ogv -OutputMode Single #Select top Operation
+    [string]$RootOP = $Ops.ForEach({($psitem -split "/")[0]}) | % {($_).ToLower()} | sort | Get-Unique | ogv -OutputMode Single #Select top Operation
     [string[]]$subLevel = get-subOps -RootOP "$RootOP/*" #Get all sublevel Operations
     [int]$cLvel=1
     [int]$maxLevel = ($subLevel.ForEach({($psitem -split "/").count}) | measure -Maximum).Maximum #Get the maximum deph of the operation
@@ -29,7 +29,7 @@ param (
         [bool]$End=$false
         [string[]]$subLevel = get-subOps -RootOP "$RootOP/*"
         [int]$maxLevel = ($subLevel.ForEach({($psitem -split "/").count}) | measure -Maximum).Maximum
-        [string[]]$Options = $subLevel.ForEach({($psitem -split "/")[$cLvel]}) | sort | Get-Unique #Extract all suboperation options
+        [string[]]$Options = $subLevel.ForEach({($psitem -split "/")[$cLvel]}) | % {($_).ToLower()} | sort | Get-Unique #Extract all suboperation options
         $Options += "*"
         if ($Options.Count -gt 1) {
             if ($RootOP -match "(\/\*){2,}$") { #If last op is /*/* ask if done
