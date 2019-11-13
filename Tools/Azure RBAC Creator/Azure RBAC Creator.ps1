@@ -1,14 +1,14 @@
 ﻿#Login
-Login-AzureRmAccount
+Login-AzAccount
 
 #Select Subscription
-$sub = Get-AzureRmSubscription | ogv -PassThru
-$sub | Select-AzureRmSubscription
+$sub = Get-AzSubscription | ogv -PassThru
+$sub | Select-AzSubscription
 
 #region functions
 function get-subOps {
 param ($RootOP)
-    [string[]]$subOps=(Get-AzureRmProviderOperation "$RootOP" | select Operation).Operation #Get Operation
+    [string[]]$subOps=(Get-AzProviderOperation "$RootOP" | select Operation).Operation #Get Operation
     return $subOps
 }
 
@@ -17,7 +17,7 @@ param (
 [Parameter(Mandatory=$true)][ValidateNotNullOrEmpty()]$Role,
 [Parameter(Mandatory=$true)][ValidateSet("Actions","NotActions")]$type
 ) #add pipeline
-    [object[]]$ProviderOperations = Get-AzureRmProviderOperation * #Get all Provider Operations
+    [object[]]$ProviderOperations = Get-AzProviderOperation * #Get all Provider Operations
     [string[]]$Ops = $ProviderOperations.Operation #Filter out the Operation Value
 
     [string]$RootOP = $Ops.ForEach({($psitem -split "/")[0]}) | sort | Get-Unique | ogv -OutputMode Single #Select top Operation
@@ -65,7 +65,7 @@ param (
 }
 
 function Interactive-a365RBAC {
-    $Role = Get-AzureRmRoleDefinition -Name "Reader" #Load Template
+    $Role = Get-AzRoleDefinition -Name "Reader" #Load Template
     $Role.Id = ([guid]::NewGuid()).guid #Creat New random Guid
     $Role.IsCustom = $true #Mark as custom
     $Role.Name = Read-Host -Prompt "Role Name" #Change to read-host
@@ -108,13 +108,13 @@ function Interactive-a365RBAC {
     if ($ScopeLevel -eq 0) { #Global
         $Role.AssignableScopes.Add("/")
     } elseif ($ScopeLevel -eq 1) { #Subscriptions
-        [object[]]$Subscriptions = Get-AzureRmSubscription | ogv -OutputMode Multiple
+        [object[]]$Subscriptions = Get-AzSubscription | ogv -OutputMode Multiple
         $Subscriptions.ForEach({
             $Sub = $PSItem.SubscriptionId
             $Role.AssignableScopes.Add(("/subscriptions/{0}" -f $Sub))
         })
     } elseif ($ScopeLevel -eq 2) { #ResourceGroup
-        [object[]]$Groups=Get-AzureRmResourceGroup | ogv -OutputMode Multiple
+        [object[]]$Groups=Get-AzResourceGroup | ogv -OutputMode Multiple
         $Groups.ForEach({
             [string]$Group=$psitem.ResourceId
             $Role.AssignableScopes.Add($Group)
@@ -123,29 +123,32 @@ function Interactive-a365RBAC {
     return $role
 }
 #endregion
+break
 
+#Create interactive
 $newRoleDef = Interactive-a365RBAC
-New-AzureRmRoleDefinition -Role $newRoleDef
+New-AzRoleDefinition -Role $newRoleDef
 
-#load 
-Get-AzureRmRoleDefinition -Name $newRoleDef.Name
+#load existing
+Get-AzRoleDefinition -Name $newRoleDef.Name
 
 #load and custom config
-$role = Get-AzureRmRoleDefinition | ogv -PassThru
+$role = Get-AzRoleDefinition | ogv -PassThru
 $role.Actions.Add($newRoleDef.Actions)
 $role.Actions.Add("Microsoft.Automation/automationAccounts/runbooks/draft/readContent/action")
 $role.Actions.Add("Microsoft.Automation/automationAccounts/runbooks/draft/undoEdit/action")
 $role.AssignableScopes.Add(("/subscriptions/0d8634d0-5890-4a87-b7bf-71913ecddd5d"))
-Set-AzureRmRoleDefinition -Role $role
+Set-AzRoleDefinition -Role $role
 
 #new assignment
-New-AzureRmRoleAssignment -SignInName "rbactest@bisnodecloud.onmicrosoft.com" -ResourceGroupName "biazrgnbisnodeweb01" -RoleDefinitionName $newRoleDef.Name
+New-AzRoleAssignment -SignInName "jon.jander@ptj.se" - -RoleDefinitionName $newRoleDef.Name
 
 
 
 
 #Remove def
 break
-get-AzureRmRoleDefinition | ? {$_.IsCustom -eq $true} #Get custom
-Remove-AzureRmRoleDefinition -Name $newRole.Name #Remove role
+$customRoles = get-AzRoleDefinition | ? {$_.IsCustom -eq $true} #Get custom
+$customRoles | ogv -PassThru | Remove-AzRoleDefinition
+Remove-AzRoleDefinition -Name $newRoleDef.Name #Remove role
 break
