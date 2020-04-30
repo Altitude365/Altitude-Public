@@ -133,11 +133,41 @@ New-AzRoleDefinition -Role $newRoleDef
 Get-AzRoleDefinition -Name $newRoleDef.Name
 
 #load and custom config
-$role = Get-AzRoleDefinition | ogv -PassThru
-$role.Actions.Add($newRoleDef.Actions)
-$role.Actions.Add("Microsoft.Automation/automationAccounts/runbooks/draft/readContent/action")
-$role.Actions.Add("Microsoft.Automation/automationAccounts/runbooks/draft/undoEdit/action")
-$role.AssignableScopes.Add(("/subscriptions/0d8634d0-5890-4a87-b7bf-71913ecddd5d"))
+$role = Get-AzRoleDefinition | ? {$_.IsCustom -eq $true}  | ogv -PassThru
+
+$role.Id = "f01b3d3a-86e2-4cdf-b67c-74ad5bb1b28d" #([guid]::NewGuid()).tostring()
+$role.IsCustom = $true
+$role.Name = "Operations"
+$role.Description = "Samlingsroll for operations rättigheter"
+$role.Actions.Clear()
+
+$role.Actions.Add("Microsoft.OperationalInsights/*")
+$role.Actions.Add("Microsoft.Insights/*")
+$role.Actions.Add("Microsoft.StreamAnalytics/*")
+$role.Actions.Add("Microsoft.Resources/*")
+$role.Actions.Add("Microsoft.Storage/*")
+$role.Actions.Add("Microsoft.Web/*")
+$role.Actions.Add("Microsoft.AlertsManagement/*")
+$role.Actions.Add("Microsoft.WorkloadMonitor/*/read")
+
+$role.NotActions.Clear()
+$role.NotActions.Add("Microsoft.OperationalInsights/*/Delete")
+$role.NotActions.Add("Microsoft.Storage/*/Delete")
+$role.NotActions.Add("Microsoft.Insights/*/Delete")
+$role.NotActions.Add("Microsoft.Resources/*/Delete")
+$role.NotActions.Add("Microsoft.Web/*/Delete")
+
+$role.AssignableScopes.Clear()
+$role.AssignableScopes.Add(("/subscriptions/f7eaeda1-25e6-4d26-bb56-e279ae7ff315"))
+$role.AssignableScopes.Add(("/subscriptions/c8a5845d-daf6-4ef2-bb54-66456f3802fa"))
+$role.AssignableScopes.Add(("/subscriptions/b5b19f7e-5fc6-4a22-975b-d0e8be53fe05"))
+$role.AssignableScopes.Add(("/subscriptions/8b4f0f8a-1007-4aca-9fe8-371b332db64b"))
+New-AzRoleDefinition -Role $role
+
+#$role.Actions.Add($newRoleDef.Actions)
+#$role.Actions.Add("Microsoft.Automation/automationAccounts/runbooks/draft/readContent/action")
+#$role.Actions.Add("Microsoft.Automation/automationAccounts/runbooks/draft/undoEdit/action")
+
 Set-AzRoleDefinition -Role $role
 
 #new assignment
